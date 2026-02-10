@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Offensive Mentor - Групповое менторство (12 недель)</title>
+
+  <style>
+    :root{
+      /* POSTER MODE */
+      --posterWidth: 1280px; /* было 1080px */
+      --posterPad: 64px;
+      --posterGap: 20px;
+
+      /* Offensive palette: red + yellow */
+      --bg0:#0b0707;
+      --bg1:#120a0a;
+      --card: rgba(20, 12, 12, .78);
+
+      --stroke: rgba(255, 215, 0, .22);
+      --stroke2: rgba(255, 60, 60, .22);
+
+      --text:#fff3e6;
+      --muted:#ffd9b0;
+
+      --accent:#ff2d2d;
+      --accent2:#ffcc00;
+
+      --shadow: 0 18px 52px rgba(0,0,0,.65);
+      --radius: 22px;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+      /* headings */
+      --hGlow: 0 0 18px rgba(255,45,45,.18), 0 0 18px rgba(255,204,0,.12);
+      --hLine: linear-gradient(90deg, rgba(255,45,45,.85), rgba(255,204,0,.85), rgba(255,45,45,.35));
+
+      /* TYPE SCALE (увеличено) */
+      --p: 17px;      /* базовый текст */
+      --li: 16px;     /* списки */
+      --small: 13px;  /* мелкие подписи */
+      --lead: 17px;   /* lead */
+      --week: 15.5px; /* список внутри недель */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      color:var(--text);
+      background:
+        radial-gradient(1100px 650px at 14% 10%, rgba(255,45,45,.18), transparent 60%),
+        radial-gradient(900px 600px at 82% 14%, rgba(255,204,0,.14), transparent 62%),
+        radial-gradient(900px 600px at 68% 84%, rgba(255,45,45,.10), transparent 65%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* PRINT / PDF */
+    @page { margin: 0; }
+    @media print{
+      .shell{
+        width: var(--posterWidth);
+        max-width: var(--posterWidth);
+        padding: 28px 24px 28px;
+      }
+      a{ text-decoration: none; }
+    }
+
+    /* POSTER LAYOUT */
+    .shell{
+      width: var(--posterWidth);
+      max-width: var(--posterWidth);
+      margin: 0 auto;
+      padding: var(--posterPad) 26px 80px;
+    }
+
+    .section{ margin-top: var(--posterGap); }
+    .grid{ margin-top: var(--posterGap); }
+    .footer{ margin-top: var(--posterGap); }
+
+    /* ===== HEADINGS SYSTEM ===== */
+    .h1{
+      font-size: 44px; /* увеличено */
+      line-height: 1.05;
+      letter-spacing: -.7px;
+      margin: 14px 0 12px;
+      text-shadow: var(--hGlow);
+    }
+    .h1 .grad{
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .h1line{
+      height: 4px; /* чуть толще */
+      width: 100%;
+      background: var(--hLine);
+      border-radius: 999px;
+      margin: 12px 0 0;
+      opacity: .95;
+    }
+
+    .h2{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      margin: 0 0 12px;
+      font-size: 20px; /* увеличено */
+      letter-spacing: .2px;
+    }
+    .h2:before{
+      content:"";
+      width: 12px;
+      height: 22px;
+      border-radius: 7px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 22px rgba(255,45,45,.12);
+      border: 1px solid rgba(255,255,255,.10);
+      flex: 0 0 auto;
+    }
+    .h2:after{
+      content:"";
+      height: 1px;
+      flex: 1 1 auto;
+      background: linear-gradient(90deg, rgba(255,204,0,.28), rgba(255,45,45,.10), transparent);
+      border-radius: 999px;
+      margin-left: 6px;
+      transform: translateY(1px);
+    }
+
+    .capH3{
+      text-transform: uppercase;
+      color: rgba(255,204,0,.98);
+      letter-spacing: .7px;
+      font-weight: 950;
+      text-shadow: 0 0 14px rgba(255,204,0,.12);
+    }
+
+    .h3{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      margin: 0 0 10px;
+      font-size: 15px; /* увеличено */
+      letter-spacing: .2px;
+      color: rgba(255,243,230,.98);
+    }
+    .h3 .pill.step{
+      background: linear-gradient(135deg, rgba(255,45,45,.35), rgba(255,204,0,.22));
+      border: 1px solid rgba(255,204,0,.24);
+      color: rgba(255,243,230,.98);
+      font-weight: 950;
+      min-width: 34px;
+      text-align: center;
+    }
+
+    .h3 .pill{
+      font-family: var(--mono);
+      font-size: 12px; /* увеличено */
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,204,0,.20);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,243,230,.92);
+    }
+
+    /* ===== HERO ===== */
+    .hero{
+      position:relative;
+      padding: 32px 26px; /* увеличено */
+      border: 1px solid var(--stroke);
+      background: linear-gradient(135deg, rgba(255,45,45,.14), rgba(255,204,0,.10));
+      border-radius: calc(var(--radius) + 10px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(520px 220px at 14% 12%, rgba(255,45,45,.22), transparent 70%),
+        radial-gradient(640px 260px at 86% 18%, rgba(255,204,0,.18), transparent 75%),
+        repeating-linear-gradient(90deg, rgba(255,204,0,.05) 0 1px, transparent 1px 26px),
+        repeating-linear-gradient(0deg, rgba(255,45,45,.035) 0 1px, transparent 1px 26px);
+      opacity:.9;
+      pointer-events:none;
+      filter: blur(.6px);
+    }
+    .hero > *{ position:relative; }
+
+    .topline{
+      display:flex; flex-wrap:wrap; gap:12px 14px;
+      align-items:center; justify-content:space-between;
+      margin-bottom: 12px;
+    }
+    .brand{ display:flex; gap:14px; align-items:center; }
+    .logo{
+      width:52px; height:52px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 14px 34px rgba(255,45,45,.18);
+      border: 1px solid rgba(255,255,255,.16);
+    }
+    .brand .name{
+      font-size: 20px;
+      margin:0;
+      letter-spacing:.2px;
+      font-weight: 950;
+    }
+    .brand .sub{
+      margin:3px 0 0;
+      font-size: var(--small);
+      color: rgba(255,217,176,.92);
+    }
+
+    .contacts{
+      text-align:right;
+      font-size: var(--small);
+      color: rgba(255,217,176,.92);
+      line-height: 1.35;
+    }
+    .contacts b{ color: var(--text); font-weight: 950; }
+    .tag{
+      display:inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,204,0,.28);
+      background: rgba(0,0,0,.22);
+      margin-top: 7px;
+      font-family: var(--mono);
+      color: rgba(255,243,230,.95);
+      font-size: 13px;
+    }
+
+    .lead{
+      margin: 0;
+      color: rgba(255,217,176,.95);
+      font-size: var(--lead);
+      line-height: 1.72;
+      max-width: 108ch; /* шире */
+    }
+
+    .chips{
+      display:flex; flex-wrap:wrap;
+      gap:12px;
+      margin-top: 18px;
+    }
+    .chip{
+      border: 1px solid rgba(255,204,0,.22);
+      background: rgba(0,0,0,.18);
+      border-radius: 999px;
+      padding: 10px 14px; /* больше */
+      font-size: 14px; /* больше */
+      color: rgba(255,243,230,.95);
+      backdrop-filter: blur(6px);
+    }
+    .chip b{ color:#fff; }
+
+    .btnrow{
+      display:flex; flex-wrap:wrap; gap:12px;
+      margin-top: 18px;
+      align-items:center;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center; justify-content:center;
+      padding: 12px 16px; /* больше */
+      border-radius: 14px;
+      border: 1px solid rgba(255,204,0,.22);
+      background: linear-gradient(135deg, rgba(255,45,45,.28), rgba(255,204,0,.18));
+      color: var(--text);
+      font-weight: 950;
+      text-decoration:none;
+      box-shadow: 0 16px 38px rgba(0,0,0,.45);
+      font-size: 14px;
+    }
+    .btn.secondary{
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,45,45,.22);
+      font-weight: 900;
+      color: rgba(255,217,176,.95);
+    }
+
+    /* LAYOUT */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.06fr .94fr; /* чуть шире правый блок */
+      gap: 18px;
+    }
+
+    .card{
+      border: 1px solid rgba(255,204,0,.18);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 22px; /* больше */
+      overflow:hidden;
+    }
+
+    .list{
+      margin: 0;
+      padding-left: 20px;
+      color: rgba(255,243,230,.96);
+      line-height: 1.72;
+      font-size: var(--li);
+    }
+    .list li{ margin: 8px 0; }
+
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .k{
+      padding: 14px 14px;
+      border-radius: 16px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,204,0,.18);
+    }
+    .k .n{
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -.2px;
+      margin: 0 0 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .k .t{
+      margin:0;
+      font-size: 13px;
+      color: rgba(255,217,176,.92);
+      line-height: 1.35;
+    }
+
+    .two{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .weekgrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .week{
+      border: 1px solid rgba(255,45,45,.18);
+      background: rgba(0,0,0,.16);
+      border-radius: 18px;
+      padding: 16px 16px;
+    }
+    .week .wh{
+      display:flex; flex-wrap:wrap; gap:10px;
+      justify-content:space-between; align-items:center;
+      margin-bottom: 8px;
+    }
+    .week .wh b{
+      font-size: 16px;
+      letter-spacing: .2px;
+      color: rgba(255,204,0,.98);
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(255,204,0,.10);
+    }
+    .week .num{
+      font-family: var(--mono);
+      font-size: 13px;
+      color: rgba(255,243,230,.88);
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,204,0,.20);
+      background: rgba(0,0,0,.22);
+    }
+    .week ul{
+      margin:0;
+      padding-left: 20px;
+      color: rgba(255,243,230,.96);
+      line-height: 1.72;
+      font-size: var(--week);
+    }
+    .week li{ margin: 7px 0; }
+
+    .footer{
+      text-align:center;
+      color: rgba(255,217,176,.92);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .footer .tagline{
+      margin-top: 10px;
+      display:inline-block;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,204,0,.18);
+      background: rgba(0,0,0,.16);
+      font-family: var(--mono);
+      color: rgba(255,243,230,.92);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1320px){
+      .shell{ width: 100%; max-width: 100%; padding: 22px 16px 54px; }
+    }
+    @media (max-width: 1020px){
+      .grid{ grid-template-columns: 1fr; }
+      .two{ grid-template-columns: 1fr; }
+      .contacts{ text-align:left; }
+      .h1{ font-size: 34px; }
+    }
+	/* =========================
+   THEME: 16-BIT RETRO
+   вставь в конец <style>
+   ========================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root{
+  --bg0:#0b1026;
+  --bg1:#0a0816;
+
+  --text:#fff9d6;
+  --muted:#ffe39a;
+
+  --accent:#3cff7a;   /* зелёный CRT */
+  --accent2:#ff5fd7;  /* розовый неон */
+
+  --card: rgba(10, 10, 18, .78);
+  --stroke: rgba(60,255,122,.22);
+  --stroke2: rgba(255,95,215,.18);
+
+  --shadow: 0 20px 0 rgba(0,0,0,.45), 0 34px 0 rgba(0,0,0,.25);
+}
+
+/* пиксельный заголовок, но не ломаем читаемость: только H1/H2 */
+.h1, .h2{
+  font-family: "Press Start 2P", var(--sys) !important;
+  letter-spacing: 0.4px !important;
+}
+.h1{ font-size: 30px !important; line-height: 1.25 !important; }
+.h2{ font-size: 15px !important; line-height: 1.25 !important; }
+
+body{
+  background:
+    radial-gradient(900px 520px at 20% 18%, rgba(60,255,122,.12), transparent 70%),
+    radial-gradient(900px 520px at 82% 18%, rgba(255,95,215,.10), transparent 72%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+}
+
+.canvas:before{
+  opacity:.95;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 24px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 2px, transparent 2px 24px);
+}
+
+.hero, .card{
+  border-radius: 0 !important;
+  border: 2px solid rgba(255,255,255,.14) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.hero{
+  background: linear-gradient(135deg, rgba(60,255,122,.12), rgba(255,95,215,.10));
+}
+
+.logo{
+  border-radius: 0 !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: none !important;
+}
+
+.h1 .grad{
+  background: linear-gradient(90deg, var(--accent), #7fe7ff, var(--accent2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.h1line{
+  height: 6px !important;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+
+.line, .callout, .timelineWrap, .weekCard, .chip, .miniTag, .tagNick{
+  border-radius: 0 !important;
+  border: 2px solid rgba(255,255,255,.12) !important;
+  background: rgba(0,0,0,.25) !important;
+  box-shadow: none !important;
+}
+
+.btn{
+  border-radius: 0 !important;
+  border: 2px solid rgba(255,255,255,.14) !important;
+  background: linear-gradient(135deg, rgba(60,255,122,.20), rgba(255,95,215,.14)) !important;
+  box-shadow: none !important;
+}
+
+.btn.secondary{
+  background: rgba(0,0,0,.35) !important;
+}
+
+.weekCard:before{
+  height: 6px !important;
+  background: linear-gradient(90deg, var(--accent), var(--accent2)) !important;
+}
+
+.wkTag, .chip .dot{
+  border-radius: 0 !important;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="topline">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="name">Offensive Mentor</div>
+            <div class="sub">Алексей Щербаков</div>
+          </div>
+        </div>
+
+        <div class="contacts">
+          <div><b>Telegram:</b> <span class="tag">@AShchRED</span></div>
+        </div>
+      </div>
+
+      <div class="h1">
+        <span class="grad">Групповое менторство по offensive security (12 недель)</span>
+        <div class="h1line" aria-hidden="true"></div>
+      </div>
+
+      <p class="lead">
+        Каждую неделю вы получаете задание и материалы, пробуете руками, а на созвоне я собираю всё в понятную систему и даю рабочую логику действий.
+      </p>
+
+      <div class="chips">
+        <div class="chip"><b>Длительность:</b> 3 месяца (12 недель)</div>
+        <div class="chip"><b>Группа:</b> 5-6 человек максимум</div>
+        <div class="chip"><b>Созвоны:</b> 1 раз в неделю, Zoom, 2 часа (12 созвонов = 24 часа)</div>
+        <div class="chip"><b>Ежемесячный Q&A:</b> 1 раз в месяц (3 созвона за поток)</div>
+        <div class="chip"><b>Финал:</b> МОК-собеседование - итог нашего взаимодействия и работы</div>
+        <div class="chip"><b>Стоимость:</b> 18000 р в месяц</div>
+      </div>
+
+      <div class="btnrow">
+        <a class="btn" href="#signup">Заинтересовало - записаться</a>
+        <a class="btn secondary" href="#program">Смотреть программу 12 недель</a>
+      </div>
+    </section>
+
+    <!-- FORMAT AND NUMBERS -->
+    <section class="grid section" id="format">
+      <div class="card">
+        <div class="h2">Формат и цифры</div>
+        <ul class="list">
+          <li><b>Длительность:</b> 3 месяца (12 недель)</li>
+          <li><b>Группа:</b> 5-6 человек максимум</li>
+          <li><b>Созвоны:</b> 1 раз в неделю, Zoom, 2 часа</li>
+          <li><b>Созвоны:</b> 12 созвонов = 24 часа живой работы в группе</li>
+          <li><b>Ежемесячный Q&A:</b> 1 раз в месяц отдельный созвон</li>
+          <li><b>Q&A:</b> </li>
+          <li><b>Telegram-чат:</b> закрытый чат на весь поток
+            <ul class="list">
+              <li>вопросы по материалам и практике</li>
+              <li>задания на неделю</li>
+              <li>ссылки, заметки, уточнения по ходу обучения</li>
+            </ul>
+          </li>
+          <li><b>Финал:</b> МОК-собеседование, 2 часа, один на один</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="h2">Стоимость</div>
+        <ul class="list">
+          <li><b>18000 р в месяц</b></li>
+          <li><b>длительность 3 месяца</b></li>
+        </ul>
+
+        <div style="margin-top:16px;"></div>
+        <div class="h2">Быстрые цифры</div>
+        <div class="kpi">
+          <div class="k"><p class="n">12</p><p class="t">недель обучения</p></div>
+          <div class="k"><p class="n">5-6</p><p class="t">человек максимум</p></div>
+          <div class="k"><p class="n">24 часа</p><p class="t">созвоны в группе</p></div>
+          <div class="k"><p class="n">3 часа</p><p class="t">ежемесячные Q&A</p></div>
+          <div class="k"><p class="n">2 часа</p><p class="t">МОК-собеседование</p></div>
+          <div class="k"><p class="n">18000 р</p><p class="t">в месяц</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT YOU GET -->
+    <section class="section card" id="youget">
+      <div class="h2">Что вы получаете за 3 месяца</div>
+
+      <div class="weekgrid">
+        <div class="week">
+          <div class="h3 capH3">12 недель обучения по четкому плану</div>
+          <ul>
+            <li>Темы выстроены поступательно и закрывают базу инфраструктурного пентеста.</li>
+            <li>Начинаем с рассмотрения компьютерных сетей, сетевых протоколов и базовых атак, затем под микроскопом разбираем компоненты инфраструктуры компании и то, как каждый элемент может быть использован в рамках пентеста, дальше переходим к CVE: где искать, как читать PoC, как оценивать применимость и безопасно пробовать, затем разбираем веб-уязвимости, после - post-exploitation и повышение привилегий в Linux и Windows, и только потом заходим в Active Directory: база (Kerberos/LDAP) -> атаки -> права/ACL и цепочки через BloodHound, плюс финальная сборка методологии.</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="h3 capH3">12 групповых созвонов по 2 часа</div>
+          <ul>
+            <li>в полулекционном формате закрываем теорию с примерами из практики и пояснением почему так, а не иначе</li>
+            <li>встраиваем тему в общую методологию и показываем правильную последовательность действий на практике</li>
+            <li>после созвона у вас остается мой конспект, чтобы можно было быстро вернуться к теме</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="h3 capH3">3 отдельных Q&A созвона</div>
+          <ul>
+            <li>Раз в месяц отдельный созвон под глубокие вопросы, которые лучше разбирать спокойно и системно.</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="h3 capH3">Закрытый Telegram-чат на весь поток</div>
+          <ul>
+            <li>вопросы по материалам и практике + быстрые уточнения по ходу недели</li>
+            <li>задания, ссылки, дополнительные заметки</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="h3 capH3">Материалы остаются у вас</div>
+          <ul>
+            <li>презентации, схемы, ссылки и мой конспект по темам</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="h3 capH3">МОК-собеседование (2 часа, индивидуально)</div>
+          <ul>
+            <li>Итог нашего взаимодействия и работы: тестовое интервью на позицию пентестера по темам потока.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT FORMAT -->
+    <section class="section card" id="about">
+      <div class="h2">О чем этот формат и как он устроен</div>
+      <p class="lead" style="max-width:none; margin:0 0 12px;">
+        Этот поток для тех, кто уже что-то пробовал или читал про пентест, но в голове пока нет структуры.
+      </p>
+      <p class="lead" style="max-width:none; margin:0 0 10px;">
+        Здесь цель такая: чтобы у вас появилась нормальная картина процесса и порядок действий. Чтобы вы понимали:
+      </p>
+      <ul class="list">
+      <ul class="list">
+              <li>как строится инфраструктурный пентест по шагам и что вы ищете на каждом этапе</li>
+              <li>как из разведки и сканирования рождаются гипотезы, приоритеты и план действий</li>
+              <li>что делать после доступа к хосту: post-exploitation и повышение привилегий (Linux/Windows)</li>
+              <li>как подходить к Active Directory: база Kerberos/LDAP -> атаки -> права/ACL и цепочки через BloodHound</li>
+            </ul>
+
+    </section>
+
+    <!-- FOR WHOM -->
+    <section class="section card" id="forwhom">
+      <div class="h2">Для кого</div>
+      <p class="lead" style="max-width:none; margin:0 0 10px;">Подходит, если вы:</p>
+      <ul class="list">
+        <li>начинающий пентестер и хотите сложить базу нормально</li>
+        <li>уже ковыряли TryHackMe/HTB, читали статьи, смотрели видео, но все разрозненно</li>
+        <li>админ/инженер/специалист по ИБ и хотите перейти в offensive</li>
+        <li>готовы читать, разбираться и работать руками</li>
+      </ul>
+      <p class="lead" style="max-width:none; margin:10px 0 0;">
+        Мы начинаем с начала: сети, протоколы, базовые сетевые атаки, разведка, сканирование, понимание инфраструктуры. И только потом идем в более тяжелые блоки.
+      </p>
+    </section>
+
+    <!-- WEEK FLOW -->
+    <section class="section card" id="weekflow">
+      <div class="h2">Как проходит неделя (задание, вопросы, практика, созвон)</div>
+
+      <div class="h3" style="margin-top:2px;"><span class="pill step">1</span>В начале каждой недели вы получаете</div>
+      <ul class="list">
+        <li>задание по теме недели</li>
+        <li>материалы (статьи/методички/ссылки)</li>
+        <li>мой короткий комментарий голосовым: на что особенно обратить внимание</li>
+        <li>список вопросов, на которые важно уметь отвечать (вопросы, которые встречаются на собеседованиях и которые мы будем обсуждать на созвоне)</li>
+      </ul>
+
+      <div class="h3" style="margin-top:14px;"><span class="pill step">2</span>Дальше в течение недели вы</div>
+      <ul class="list">
+        <li>читаете материалы</li>
+        <li>параллельно ищете ответы на вопросы из списка</li>
+        <li>пробуете руками практическую часть (на стендах/машинах/киберполигонах)</li>
+      </ul>
+
+      <div class="h3" style="margin-top:14px;"><span class="pill step">3</span>На созвоне я</div>
+      <ul class="list">
+        <li>прежде всего прохожусь по самым важным теоретическим аспектам в полулекционном формате, с примерами из практики и пояснением почему так, а не иначе</li>
+        <li>встраиваю тему в общую методологию, показываю как выполнять на практике и какая последовательность действий работает</li>
+        <li>после созвона у вас остается мой конспект, чтобы можно было быстро вернуться к теме</li>
+      </ul>
+    </section>
+
+    <!-- PRACTICE -->
+    <section class="section card" id="practice">
+      <div class="h2">Практика: где именно вы будете отрабатывать</div>
+      <p class="lead" style="max-width:none; margin:0 0 10px;">
+        Практика будет на условно-бесплатных и доступных штуках:
+      </p>
+      <ul class="list">
+        <li>VulnHub, Metasploitable и другие уязвимые образы</li>
+        <li>TryHackMe и Hack The Box (в том числе бесплатные машины)</li>
+        <li>если у вас уже есть VIP подписки на TryHackMe или Hack The Box - можно отрабатывать и там</li>
+        <li>StandOff365 и другие открытые киберполигоны</li>
+        <li>своя виртуальная инфраструктура, включая домен (если нужно)</li>
+      </ul>
+      <p class="lead" style="max-width:none; margin:10px 0 0;">
+        Про поднятие базовой доменной инфраструктуры будет отдельное видео, я скину.
+      </p>
+    </section>
+
+    <!-- PROGRAM -->
+    <section class="section card" id="program">
+      <div class="h2">Программа по неделям (12 недель)</div>
+
+      <div class="weekgrid">
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 1. Введение: сети, протоколы, базовые сетевые атаки, старт в пентесте</b>
+            <span class="num">Неделя 1</span>
+          </div>
+          <ul>
+            <li>зачем существует пентест и offensive security + общий обзор процесса инфраструктурного пентеста</li>
+            <li>как устроены компьютерные сети и ключевые сетевые протоколы с точки зрения проверок</li>
+            <li>базовый минимум сетевых атак: понимание и практические примеры</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 2. Типовая инфраструктура компании + первые контуры методологии</b>
+            <span class="num">Неделя 2</span>
+          </div>
+          <ul>
+            <li>какие инфраструктурные компоненты реально встречаются в компаниях и что пентестер обычно проверяет</li>
+            <li>почта, печать, 1С, менеджмент-интерфейсы, мониторинг и другие узлы - как их видеть на проекте</li>
+            <li>первые контуры методологии: этапы, подходы и мышление шагами</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 3. Разведка и сканирование как процесс (глубокий разбор)</b>
+            <span class="num">Неделя 3</span>
+          </div>
+          <ul>
+            <li>разведка: артефакты, гипотезы, приоритеты, сегментация и границы видимости</li>
+            <li>этапность сканирования, “juicy/RCE” сервисы, альтернативные инструменты и подходы</li>
+            <li>анализ результатов: как превращать скан в план действий</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 4. Инфраструктурные уязвимости: CVE, PoC, эксплуатация + brute/spray/default creds</b>
+            <span class="num">Неделя 4</span>
+          </div>
+          <ul>
+            <li>CVE и PoC: где искать, как читать, как оценивать применимость и риски</li>
+            <li>инструменты: GitHub/ExploitDB/Metasploit, Searchsploit + базовая гигиена эксплуатации</li>
+            <li>credentials-истории: brute, password spray, default пароли (Hydra/Patator)</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 5. Веб: базовая проверка веб-сервисов и первичные уязвимости</b>
+            <span class="num">Неделя 5</span>
+          </div>
+          <ul>
+            <li>идентификация веб-сервисов (самопис/фреймворк/готовое решение): HTTPX, GoWitness</li>
+            <li>базовые инструменты: Burp Suite, SQLMap, Metasploit + первичные проверки</li>
+            <li>webshell, dirbusting и fuzzing как базовые техники</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 6. Linux: постэксплуатация, privesc, situational awareness</b>
+            <span class="num">Неделя 6</span>
+          </div>
+          <ul>
+            <li>что делаем после доступа: базовая последовательность и situational awareness</li>
+            <li>повышение привилегий в Linux: типовые направления и как искать зацепки</li>
+            <li>что можно извлечь с хоста и как двигаться дальше</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 7. Windows: постэксплуатация, privesc, situational awareness</b>
+            <span class="num">Неделя 7</span>
+          </div>
+          <ul>
+            <li>что делаем после доступа: логика действий и где искать интересное</li>
+            <li>повышение привилегий в Windows: типовые направления и частые ошибки</li>
+            <li>как фиксировать находки и строить следующий шаг</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 8. Учетные данные в Windows: где лежат и что бывает кроме пароля</b>
+            <span class="num">Неделя 8</span>
+          </div>
+          <ul>
+            <li>карта мест и артефактов: где могут лежать секреты и учетки на Windows-хосте</li>
+            <li>LSASS, DPAPI, сохраненные креды - как это встречается на практике</li>
+            <li>хэши, Kerberos-ключи и другие варианты аутентификации</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 9. Active Directory: устройство + Kerberos и LDAP</b>
+            <span class="num">Неделя 9</span>
+          </div>
+          <ul>
+            <li>Active Directory: базовые сущности и логика работы на понятном уровне</li>
+            <li>Kerberos и LDAP: что нужно понимать, чтобы атаки дальше имели смысл</li>
+            <li>как это связывается с реальным инфраструктурным пентестом</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 10. Active Directory: атаки уровня “основа” + AD Roadmap</b>
+            <span class="num">Неделя 10</span>
+          </div>
+          <ul>
+            <li>user enumeration, AS-REQ/AS-REP roasting, Kerberoasting, targeted Kerberoasting</li>
+            <li>password spraying + LLMNR/NBT-NS как типовые связки в инфраструктуре</li>
+            <li>в конце: AD Roadmap - куда углубляться дальше после базы</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 11. Active Directory: ACL, права, misconfig + BloodHound</b>
+            <span class="num">Неделя 11</span>
+          </div>
+          <ul>
+            <li>ACL и права: какие misconfig реально дают векторы атак и цепочки</li>
+            <li>какие права что позволяют и как это превращается в маршруты эскалации</li>
+            <li>BloodHound: сбор картины и построение доменных цепочек</li>
+          </ul>
+        </div>
+
+        <div class="week">
+          <div class="wh">
+            <b>Неделя 12. Финальная неделя: собрать все в одну схему</b>
+            <span class="num">Неделя 12</span>
+          </div>
+          <ul>
+            <li>собрать методологию в единую систему и связать темы между собой</li>
+            <li>пройти процесс целиком и разобрать типовые сценарии</li>
+            <li>подготовиться к финальному МОК-собеседованию</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="section card" id="final">
+      <div class="h2">Финал: МОК-собеседование (2 часа, один на один)</div>
+      <p class="lead" style="max-width:none; margin:0 0 10px;">
+        После завершения 12 недель мы назначаем дату и проводим МОК-собеседование на 2 часа.
+      </p>
+      <p class="lead" style="max-width:none; margin:0;">
+        Это тестовое интервью на позицию пентестера. Вопросы будут строго по тем темам, которые вы прошли в рамках трехмесячного потока. Задача: увидеть, как вы отвечаете, где пробелы, что уже нормально уложилось и что стоит добить дальше.
+      </p>
+    </section>
+
+    <!-- SIGNUP -->
+    <section class="section card" id="signup">
+      <div class="h2">Заинтересовало - записаться</div>
+      <p class="lead" style="margin:0 0 12px; max-width:none;">
+        Напишите в Telegram: <span class="tag">@AShchRED</span>
+      </p>
+      <div class="btnrow">
+        <a class="btn" href="https://t.me/AShchRED" target="_blank" rel="noopener">Открыть Telegram</a>
+        <a class="btn secondary" href="#top">Вернуться наверх</a>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div class="tagline">Offensive Mentor • Алексей Щербаков • Telegram @AShchRED • Групповое менторство по offensive security (12 недель) • 18000 р в месяц</div>
+    </div>
+
+  </div>
+</body>
+</html>
